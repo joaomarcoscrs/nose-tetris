@@ -1,6 +1,6 @@
 import pygame
 from .tetris import Tetris
-from .settings import initialize_settings, SCREEN_WIDTH, SCREEN_HEIGHT
+from .settings import initialize_settings, SCREEN_WIDTH, SCREEN_HEIGHT, FALL_SPEED
 from .colors import BLACK
 
 # Initialize Pygame
@@ -19,7 +19,6 @@ clock = pygame.time.Clock()
 def main():
     tetris = Tetris()
     fall_time = 0
-    fall_speed = 500
 
     running = True
     while running:
@@ -44,7 +43,7 @@ def main():
                     running = False  # Exit full screen mode on pressing ESC
 
         fall_time += clock.get_time()
-        if fall_time > fall_speed:
+        if fall_time > FALL_SPEED:
             tetris.update()
             fall_time = 0
 

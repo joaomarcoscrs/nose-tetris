@@ -17,3 +17,5 @@ def initialize_settings():
 
 
 GRID_LINE_WIDTH = 1
+
+FALL_SPEED = 600
