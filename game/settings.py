@@ -1,4 +1,16 @@
-# Screen dimensions
-SCREEN_WIDTH = 300
-SCREEN_HEIGHT = 600
-GRID_SIZE = 30
+# settings.py
+import pygame
+
+# Placeholder values that will be updated on initialization
+SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE = 0, 0, 0
+
+# Function to get screen dimensions and grid size
+def initialize_settings():
+    screen_info = pygame.display.Info()
+    SCREEN_WIDTH = screen_info.current_w
+    SCREEN_HEIGHT = screen_info.current_h
+    GRID_SIZE = SCREEN_WIDTH // 10
+    return SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
+
+
+GRID_LINE_WIDTH = 1

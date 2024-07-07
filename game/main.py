@@ -1,13 +1,16 @@
 import pygame
 from .tetris import Tetris
-from .settings import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
+from .settings import initialize_settings, SCREEN_WIDTH, SCREEN_HEIGHT
 from .colors import BLACK
 
 # Initialize Pygame
 pygame.init()
 
-# Initialize screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+# Initialize settings
+SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE = initialize_settings()
+
+# Initialize screen in full screen mode
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Tetris')
 
 # Clock
@@ -37,6 +40,8 @@ def main():
                     tetris.move_shape(0, 1)
                 elif event.key == pygame.K_UP:
                     tetris.rotate_shape()
+                elif event.key == pygame.K_ESCAPE:
+                    running = False  # Exit full screen mode on pressing ESC
 
         fall_time += clock.get_time()
         if fall_time > fall_speed:

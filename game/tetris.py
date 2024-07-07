@@ -1,12 +1,13 @@
 import pygame
 import random
-from .settings import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
-from .colors import WHITE, SHAPE_COLORS
+from .settings import initialize_settings
+from .colors import WHITE, SHAPE_COLORS, DARK_GRAY
 from .shapes import SHAPES
 
 class Tetris:
     def __init__(self):
-        self.grid = [[0 for _ in range(10)] for _ in range(20)]
+        self.screen_width, self.screen_height, self.grid_size = initialize_settings()
+        self.grid = [[0 for _ in range(10)] for _ in range(self.screen_height // self.grid_size)]
         self.current_shape = self.get_new_shape()
         self.current_color = random.choice(SHAPE_COLORS)
         self.shape_x = 3
@@ -17,17 +18,17 @@ class Tetris:
         return random.choice(SHAPES)
 
     def draw_grid(self, screen):
-        for y in range(20):
+        for y in range(self.screen_height // self.grid_size):
             for x in range(10):
                 if self.grid[y][x] != 0:
-                    pygame.draw.rect(screen, self.grid[y][x], (x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE))
-                pygame.draw.rect(screen, WHITE, (x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE), 1)
+                    pygame.draw.rect(screen, self.grid[y][x], (x * self.grid_size, y * self.grid_size, self.grid_size, self.grid_size))
+                pygame.draw.rect(screen, DARK_GRAY, (x * self.grid_size, y * self.grid_size, self.grid_size, self.grid_size), 1)
 
     def draw_shape(self, screen):
         for y, row in enumerate(self.current_shape):
             for x, cell in enumerate(row):
                 if cell == 1:
-                    pygame.draw.rect(screen, self.current_color, ((self.shape_x + x) * GRID_SIZE, (self.shape_y + y) * GRID_SIZE, GRID_SIZE, GRID_SIZE))
+                    pygame.draw.rect(screen, self.current_color, ((self.shape_x + x) * self.grid_size, (self.shape_y + y) * self.grid_size, self.grid_size, self.grid_size))
 
     def move_shape(self, dx, dy):
         self.shape_x += dx
@@ -48,7 +49,7 @@ class Tetris:
 
     def clear_lines(self):
         new_grid = [row for row in self.grid if any(cell == 0 for cell in row)]
-        while len(new_grid) < 20:
+        while len(new_grid) < self.screen_height // self.grid_size:
             new_grid.insert(0, [0 for _ in range(10)])
         self.grid = new_grid
 
@@ -58,7 +59,7 @@ class Tetris:
                 if cell == 1:
                     new_x = self.shape_x + x + dx
                     new_y = self.shape_y + y + dy
-                    if new_x < 0 or new_x >= 10 or new_y >= 20 or self.grid[new_y][new_x] != 0:
+                    if new_x < 0 or new_x >= 10 or new_y >= self.screen_height // self.grid_size or self.grid[new_y][new_x] != 0:
                         return False
         return True
 
