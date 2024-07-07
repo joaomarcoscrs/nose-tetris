@@ -1,7 +1,7 @@
 import pygame
-from tetris import Tetris
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
-from colors import BLACK
+from .tetris import Tetris
+from .settings import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
+from .colors import BLACK
 
 # Initialize Pygame
 pygame.init()

@@ -1,8 +1,8 @@
 import pygame
 import random
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
-from colors import WHITE, SHAPE_COLORS
-from shapes import SHAPES
+from .settings import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
+from .colors import WHITE, SHAPE_COLORS
+from .shapes import SHAPES
 
 class Tetris:
     def __init__(self):
