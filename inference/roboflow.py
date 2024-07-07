@@ -1,14 +1,22 @@
 from inference import InferencePipeline
 from inference.core.interfaces.camera.entities import VideoFrame
 
+from typing import Union, Optional
+from functools import partial
+
 # import opencv to display our annotated images
 import cv2
 # import supervision to help visualize our predictions
 import supervision as sv
+# import signal and sys to handle keyboard interrupts
+import signal
+import sys
 
 # create a bounding box annotator and label annotator to use in our custom sink
 label_annotator = sv.LabelAnnotator()
 box_annotator = sv.BoundingBoxAnnotator()
+
+PIPELINE: Optional[InferencePipeline] = None
 
 
 def annotate_keypoints(image, predictions):
@@ -66,12 +74,25 @@ def render_annotated_image(predictions: dict, video_frame: VideoFrame):
     cv2.imshow("Predictions", image)
     cv2.waitKey(1)
 
-# initialize a pipeline object
-pipeline = InferencePipeline.init(
+def main() -> None:
+    global PIPELINE
+    PIPELINE = InferencePipeline.init(
     model_id="facial-features-keypoints/1", # Roboflow model to use
     video_reference=0, # Path to video, device id (int, usually 0 for built in webcams), or RTSP stream url
     on_prediction=render_annotated_image, # Function to run after each prediction
-    max_fps=10, # Maximum frames per second to process
+    max_fps=30, # Maximum frames per second to process
 )
-pipeline.start()
-pipeline.join()
+    PIPELINE.start()
+
+def signal_handler(sig, frame):
+    print("Terminating")
+    if PIPELINE is not None:
+        PIPELINE.terminate()
+        PIPELINE.join()
+    sys.exit(0)
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
+    print("Press Ctrl+C to terminate")
+    main()
+
