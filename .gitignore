@@ -1,2 +1,3 @@
 # everything inside game/__pycache__/
-game/__pycache__/
+game/__pycache__/*
+game/controls/__pycache__/*

@@ -2,6 +2,7 @@ import pygame
 from .tetris import Tetris
 from .settings import initialize_settings, SCREEN_WIDTH, SCREEN_HEIGHT, FALL_SPEED
 from .colors import BLACK
+from .controls import KeysControl
 
 # Initialize Pygame
 pygame.init()
@@ -28,18 +29,21 @@ def main():
         pygame.display.flip()
 
         for event in pygame.event.get():
+            # Change the controller being used here. It should have the same interface as BaseControl and KeysControl 
+            control = KeysControl(event)
+            
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and tetris.is_valid_move(-1, 0):
+            elif control.activated():
+                if control.move_left() and tetris.is_valid_move(-1, 0):
                     tetris.move_shape(-1, 0)
-                elif event.key == pygame.K_RIGHT and tetris.is_valid_move(1, 0):
+                elif control.move_right() and tetris.is_valid_move(1, 0):
                     tetris.move_shape(1, 0)
-                elif event.key == pygame.K_DOWN and tetris.is_valid_move(0, 1):
+                elif control.move_down() and tetris.is_valid_move(0, 1):
                     tetris.move_shape(0, 1)
-                elif event.key == pygame.K_UP:
+                elif control.rotate():
                     tetris.rotate_shape()
-                elif event.key == pygame.K_ESCAPE:
+                elif control.quit_game():
                     running = False  # Exit full screen mode on pressing ESC
 
         fall_time += clock.get_time()
