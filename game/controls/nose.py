@@ -51,61 +51,85 @@ class NoseControl(BaseControl):
 
     def image_height(self):
         return self.event.image.shape[0] if self.event.image is not None else 720  # Default height
+    
+    def eye_axis_length(self):
+        left_eye = self.left_eye()
+        right_eye = self.right_eye()
+
+        if left_eye is None or right_eye is None:
+            return 0
+
+        return abs(left_eye['x'] - right_eye['x'])
+
+    def nose_axis_length(self):
+        nose_top = self.nose_top()
+        nose_bottom = self.nose_bottom()
+
+        if nose_top is None or nose_bottom is None:
+            return 0
+
+        return abs(nose_top['y'] - nose_bottom['y'])
 
     # Interpretation functions
+    
+    def nose_horizontal_tilt_threshold(self):
+        eye_axis_length = self.eye_axis_length()
+        
+        if eye_axis_length != 0:
+            return eye_axis_length * 0.2
+        
+        return self.image_width() * 0.1
+    
+    def nose_vertical_tilt_threshold(self):
+        nose_axis_length = self.nose_axis_length()
+        
+        if nose_axis_length != 0:
+            return nose_axis_length * 0.3
+        
+        return self.image_height() * 0.2
 
     def nose_tilted_up(self):
-        CLOSE_TO_EYES_THRESHOLD = self.image_height() * 0.07  # 7% of the image height
-
         nose_tip = self.nose_tip()
         eye_midpoint = self.eye_midpoint()
 
-        if nose_tip is None or eye_midpoint is None:
-            return False
-
-        return nose_tip['y'] - eye_midpoint['y'] < CLOSE_TO_EYES_THRESHOLD
+        if nose_tip is not None and eye_midpoint is not None:
+            return nose_tip['y'] - eye_midpoint['y'] < self.nose_vertical_tilt_threshold()
+        
+        if nose_tip is not None:
+            return nose_tip['y'] < self.image_height() * 0.2
 
     def nose_tilted_down(self):
-        CLOSE_TO_NOSE_BOTTOM_THRESHOLD = self.image_height() * 0.014  # 1.4% of the image height
-
-        nose_tip = self.nose_tip()
         nose_bottom = self.nose_bottom()
-
-        if nose_tip is None or nose_bottom is None:
-            return False
-
-        return nose_bottom['y'] - nose_tip['y'] < CLOSE_TO_NOSE_BOTTOM_THRESHOLD
+        eye_midpoint = self.eye_midpoint()
+        
+        if nose_bottom is not None and eye_midpoint is not None:
+            return eye_midpoint['y'] - nose_bottom['y'] < self.nose_vertical_tilt_threshold()
+        
+        if nose_bottom is not None:
+            return nose_bottom['y'] > self.image_height() * 0.8
 
     def nose_tilted_left(self):
-        CLOSE_TO_LEFT_EYE_THRESHOLD = self.image_width() * 0.2 # 7% of the image width
-
         nose_tip = self.nose_tip()
         left_eye = self.left_eye()
 
-        print('\n\ndebug nose tilted left\n\n', 'nose_tip', nose_tip, 'left_eye', left_eye, 'nose_top', self.nose_top())
-
         if left_eye is not None and nose_tip is not None:
-            return left_eye['x'] - nose_tip['x'] < CLOSE_TO_LEFT_EYE_THRESHOLD
-
+            return left_eye['x'] - nose_tip['x'] < self.nose_horizontal_tilt_threshold()
+        
         if nose_tip is not None:
             # nose tip is more to the left than the nose top
-            return nose_tip['x'] - self.nose_top()['x'] < CLOSE_TO_LEFT_EYE_THRESHOLD
-
+            return nose_tip['x'] - self.nose_top()['x'] < self.nose_horizontal_tilt_threshold()
         return False
 
     def nose_tilted_right(self):
-        CLOSE_TO_RIGHT_EYE_THRESHOLD = self.image_width() * 0.2 # 7% of the image width
-
         nose_tip = self.nose_tip()
         right_eye = self.right_eye()
 
         if right_eye is not None and nose_tip is not None:
-            return nose_tip['x'] - right_eye['x'] < CLOSE_TO_RIGHT_EYE_THRESHOLD
-
+            return nose_tip['x'] - right_eye['x'] < self.nose_horizontal_tilt_threshold()
+        
         if nose_tip is not None:
             # nose tip is more to the right than the nose top
-            return self.nose_top()['x'] - nose_tip['x'] < CLOSE_TO_RIGHT_EYE_THRESHOLD
-
+            return self.nose_top()['x'] - nose_tip['x'] < self.nose_horizontal_tilt_threshold()
         return False
 
     # Control functions
@@ -114,10 +138,10 @@ class NoseControl(BaseControl):
         return self.event.type == pygame.USEREVENT and self.event.predictions is not None
 
     def move_left(self):
-        return self.nose_tilted_left()
+        return self.nose_tilted_right()
 
     def move_right(self):
-        return self.nose_tilted_right()
+        return self.nose_tilted_left()
 
     def move_down(self):
         return self.nose_tilted_down()
