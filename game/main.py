@@ -24,12 +24,15 @@ pygame.display.set_caption('Tetris')
 clock = pygame.time.Clock()
 
 EVENT_TIMEOUT = 100
-
 LAST_EVENT_TIME = 0
+LATEST_IMAGE = None
 
 def post_predictions_event(predictions: dict, image: Union[None, VideoFrame]):
     global LAST_EVENT_TIME
     global EVENT_TIMEOUT
+    global LATEST_IMAGE
+    
+    LATEST_IMAGE = image
     # Only posts 1 event every EVENT_TIMEOUT ms
     
     if pygame.time.get_ticks() - LAST_EVENT_TIME < EVENT_TIMEOUT:
@@ -44,6 +47,7 @@ def post_predictions_event(predictions: dict, image: Union[None, VideoFrame]):
     }))
 
 def game_main():
+    global LATEST_IMAGE
     tetris = Tetris()
     fall_time = 0
 
@@ -52,6 +56,13 @@ def game_main():
         screen.fill(BLACK)
         tetris.draw_grid(screen)
         tetris.draw_shape(screen)
+        
+        
+        # Draw the latest image at the top right corner
+        if LATEST_IMAGE is not None:
+            image_surface = pygame.surfarray.make_surface(LATEST_IMAGE.swapaxes(0, 1))
+            screen.blit(image_surface, (SCREEN_WIDTH - LATEST_IMAGE.shape[1], 0))
+        
         pygame.display.flip()
 
         for event in pygame.event.get():
