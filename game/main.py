@@ -3,7 +3,7 @@ import threading
 
 from .tetris import Tetris
 from .settings import initialize_settings, SCREEN_WIDTH, SCREEN_HEIGHT, FALL_SPEED
-from .colors import BLACK, WHITE
+from .colors import BLACK, WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, ORANGE
 from .controls import KeysControl, NoseControl
 from .roboflow import main as inference_main
 
@@ -23,10 +23,13 @@ pygame.display.set_caption('Tetris')
 # Clock
 clock = pygame.time.Clock()
 
-EVENT_TIMEOUT = 100
+EVENT_TIMEOUT = 150
 LAST_EVENT_TIME = 0
 LATEST_IMAGE = None
 predictions_received = False  # Flag to track if predictions have been received
+
+# Colors for loading shapes
+SHAPE_COLORS = [RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, ORANGE]
 
 def post_predictions_event(predictions: dict, image: Union[None, VideoFrame]):
     global LAST_EVENT_TIME
@@ -49,6 +52,22 @@ def post_predictions_event(predictions: dict, image: Union[None, VideoFrame]):
         'image': image
     }))
 
+def draw_loading_screen(screen):
+    screen.fill(BLACK)
+    
+    # Draw some random shapes
+    for i in range(7):
+        color = SHAPE_COLORS[i]
+        if i % 2 == 0:
+            pygame.draw.circle(screen, color, (SCREEN_WIDTH // 2 + (i - 3) * 40, SCREEN_HEIGHT // 2 - 100), 20)
+        else:
+            pygame.draw.rect(screen, color, (SCREEN_WIDTH // 2 + (i - 3) * 40, SCREEN_HEIGHT // 2 - 70, 40, 40))
+    
+    # Render loading text
+    font = pygame.font.Font(pygame.font.match_font('monospace'), 55)
+    text_surface = font.render('nose tetris is loading', True, WHITE)
+    screen.blit(text_surface, (SCREEN_WIDTH // 2 - text_surface.get_width() // 2, SCREEN_HEIGHT // 2 + 50))
+
 def game_main():
     global LATEST_IMAGE
     tetris = Tetris()
@@ -56,9 +75,8 @@ def game_main():
 
     running = True
     while running:
-        screen.fill(BLACK)
-        
         if predictions_received:
+            screen.fill(BLACK)
             tetris.draw_grid(screen)
             tetris.draw_shape(screen)
             
@@ -78,10 +96,7 @@ def game_main():
                 # Blit the image to the screen
                 screen.blit(image_surface, (SCREEN_WIDTH - new_width, 0))
         else:
-            # Render loading state
-            font = pygame.font.SysFont(None, 55)
-            text_surface = font.render('Loading...', True, WHITE)
-            screen.blit(text_surface, (SCREEN_WIDTH // 2 - text_surface.get_width() // 2, SCREEN_HEIGHT // 2 - text_surface.get_height() // 2))
+            draw_loading_screen(screen)
         
         pygame.display.flip()
 
