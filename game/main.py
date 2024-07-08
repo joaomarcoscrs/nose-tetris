@@ -84,15 +84,17 @@ def game_main():
                 if event.type == pygame.QUIT:
                     running = False
                 elif control.activated():
+                    # left/right moves are exclusive
                     if control.move_left() and tetris.is_valid_move(-1, 0):
                         tetris.move_shape(-1, 0)
                     elif control.move_right() and tetris.is_valid_move(1, 0):
                         tetris.move_shape(1, 0)
-                    elif control.move_down() and tetris.is_valid_move(0, 1):
+                    # up/down moves are exclusive
+                    if control.move_down() and tetris.is_valid_move(0, 1):
                         tetris.move_shape(0, 1)
                     elif control.rotate():
                         tetris.rotate_shape()
-                    elif control.quit_game():
+                    if control.quit_game():
                         running = False  # Exit full screen mode on pressing ESC
 
         fall_time += clock.get_time()
