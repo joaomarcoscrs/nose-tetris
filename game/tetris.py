@@ -10,7 +10,8 @@ class Tetris:
         self.grid = [[0 for _ in range(GRID_FACTOR)] for _ in range(self.screen_height // self.grid_size)]
         self.current_shape = self.get_new_shape()
         self.current_color = random.choice(SHAPE_COLORS)
-        self.shape_x = 3
+        # shape starts at the top middle
+        self.shape_x = self.screen_width // self.grid_size // 2 - 1
         self.shape_y = 0
         self.game_over = False
 
