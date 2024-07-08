@@ -43,7 +43,7 @@ def post_predictions_event(predictions: dict, image: Union[None, VideoFrame]):
     # Only posts 1 event every EVENT_TIMEOUT ms
     if pygame.time.get_ticks() - LAST_EVENT_TIME < EVENT_TIMEOUT:
         return
-      
+
     LAST_EVENT_TIME = pygame.time.get_ticks()
     
     pygame.event.post(pygame.event.Event(pygame.USEREVENT, {
