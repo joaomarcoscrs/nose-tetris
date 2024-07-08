@@ -68,6 +68,8 @@ def game_main():
             # Resize the image
             image_surface = pygame.surfarray.make_surface(LATEST_IMAGE.swapaxes(0, 1))
             image_surface = pygame.transform.scale(image_surface, (new_width, new_height))
+            # Mirror the image horizontally
+            image_surface = pygame.transform.flip(image_surface, True, False)
             
             # Blit the image to the screen
             screen.blit(image_surface, (SCREEN_WIDTH - new_width, 0))

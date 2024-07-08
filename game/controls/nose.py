@@ -76,10 +76,10 @@ class NoseControl(BaseControl):
         return self.event.type == pygame.USEREVENT and self.event.predictions is not None
 
     def move_left(self):
-        return self.nose_tilted_left()
+        return self.nose_tilted_right()  # Corrected to match webcam reflection
 
     def move_right(self):
-        return self.nose_tilted_right()
+        return self.nose_tilted_left()  # Corrected to match webcam reflection
 
     def move_down(self):
         return self.nose_tilted_down()
