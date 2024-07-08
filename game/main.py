@@ -60,8 +60,17 @@ def game_main():
         
         # Draw the latest image at the top right corner
         if LATEST_IMAGE is not None:
+            # Calculate new dimensions
+            new_width = SCREEN_WIDTH // 8
+            aspect_ratio = LATEST_IMAGE.shape[0] / LATEST_IMAGE.shape[1]
+            new_height = int(new_width * aspect_ratio)
+            
+            # Resize the image
             image_surface = pygame.surfarray.make_surface(LATEST_IMAGE.swapaxes(0, 1))
-            screen.blit(image_surface, (SCREEN_WIDTH - LATEST_IMAGE.shape[1], 0))
+            image_surface = pygame.transform.scale(image_surface, (new_width, new_height))
+            
+            # Blit the image to the screen
+            screen.blit(image_surface, (SCREEN_WIDTH - new_width, 0))
         
         pygame.display.flip()
 

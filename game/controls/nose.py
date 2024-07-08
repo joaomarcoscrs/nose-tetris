@@ -9,8 +9,6 @@ class NoseControl(BaseControl):
     def predictions(self):
         result = getattr(self.event, 'predictions', {})
         
-        print(result['predictions'])
-        
         return result['predictions']
 
     def activated(self):
