@@ -5,7 +5,7 @@ import pygame
 SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE = 0, 0, 0
 
 # This controls how many grid cells the screen is divided into
-GRID_FACTOR = 25
+GRID_FACTOR = 20
 
 # Function to get screen dimensions and grid size
 def initialize_settings():
