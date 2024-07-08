@@ -23,7 +23,7 @@ pygame.display.set_caption('Tetris')
 # Clock
 clock = pygame.time.Clock()
 
-EVENT_TIMEOUT = 100
+EVENT_TIMEOUT = 200
 LAST_EVENT_TIME = 0
 LATEST_IMAGE = None
 
@@ -61,7 +61,7 @@ def game_main():
         # Draw the latest image at the top right corner
         if LATEST_IMAGE is not None:
             # Calculate new dimensions
-            new_width = SCREEN_WIDTH // 8
+            new_width = SCREEN_WIDTH // 4
             aspect_ratio = LATEST_IMAGE.shape[0] / LATEST_IMAGE.shape[1]
             new_height = int(new_width * aspect_ratio)
             
