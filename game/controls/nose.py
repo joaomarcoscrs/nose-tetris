@@ -85,29 +85,29 @@ class NoseControl(BaseControl):
         if nose_tip is None and nose_bottom is None:
             return False
 
-        close_threshold = self.image_height() * 0.1  # 20% of the image height
+        close_threshold = self.image_height() * 0.05
 
         # If the nose tip is close to the nose top
         if nose_tip and nose_top and abs(nose_tip['y'] - nose_top['y']) < close_threshold:
             return True
 
         # If the nose tip is close to the y-coordinate of the eyes' midpoint
-        if nose_tip and abs(nose_tip['y'] - eye_midpoint['y']) < close_threshold:
+        if nose_tip and eye_midpoint and abs(nose_tip['y'] - eye_midpoint['y']) < close_threshold:
             return True
 
         # If only the nose bottom is visible and it's close to the eyes' midpoint
-        if nose_bottom and abs(nose_bottom['y'] - eye_midpoint['y']) < close_threshold:
+        if nose_bottom and eye_midpoint and abs(nose_bottom['y'] - eye_midpoint['y']) < close_threshold:
             return True
 
         # If the nose bottom is close to the nose top
         if nose_bottom and nose_top and abs(nose_bottom['y'] - nose_top['y']) < close_threshold:
             return True
 
-        # If the length of the nose axis is significantly shorter than the length of the eye axis
-        eye_axis_length = self.eye_axis_length()
-        nose_axis_length = self.nose_axis_length()
-        if eye_axis_length and nose_axis_length and nose_axis_length < eye_axis_length * 0.5:
-            return True
+        # # If the length of the nose axis is significantly shorter than the length of the eye axis
+        # eye_axis_length = self.eye_axis_length()
+        # nose_axis_length = self.nose_axis_length()
+        # if eye_axis_length and nose_axis_length and nose_axis_length < eye_axis_length * 0.5:
+        #     return True
 
         return False
 

@@ -23,7 +23,7 @@ pygame.display.set_caption('Tetris')
 # Clock
 clock = pygame.time.Clock()
 
-EVENT_TIMEOUT = 200
+EVENT_TIMEOUT = 100
 LAST_EVENT_TIME = 0
 LATEST_IMAGE = None
 
