@@ -57,7 +57,7 @@ def annotate_keypoints(image, predictions):
 
     return image
 
-def render_annotated_image(predictions: dict, video_frame: VideoFrame):
+def render_annotated_image(predictions: dict, video_frame: VideoFrame, on_predictions: callable):
     # get the text labels for each prediction
     labels = [p["class"] for p in predictions["predictions"]]
     # load our predictions into the Supervision Detections api
@@ -69,17 +69,21 @@ def render_annotated_image(predictions: dict, video_frame: VideoFrame):
     # image = box_annotator.annotate(image, detections=detections)
     
     image = annotate_keypoints(video_frame.image.copy(), predictions["predictions"])
-  
+    
+    # Only posts predictions event every EVENT_TIMEOUT ms
+    
+    on_predictions(predictions, image)
+
     # display the annotated image
     cv2.imshow("Predictions", image)
     cv2.waitKey(1)
 
-def main() -> None:
+def main(on_predictions = print) -> None:
     global PIPELINE
     PIPELINE = InferencePipeline.init(
     model_id="facial-features-keypoints/1", # Roboflow model to use
     video_reference=0, # Path to video, device id (int, usually 0 for built in webcams), or RTSP stream url
-    on_prediction=render_annotated_image, # Function to run after each prediction
+    on_prediction=partial(render_annotated_image, on_predictions=on_predictions), # Function to call on each prediction
     max_fps=30, # Maximum frames per second to process
 )
     PIPELINE.start()

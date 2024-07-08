@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-from game.main import main
+from game.main import run_game
 
 if __name__ == '__main__':
-    main()
+    run_game()
