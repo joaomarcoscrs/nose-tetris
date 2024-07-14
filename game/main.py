@@ -16,8 +16,8 @@ pygame.init()
 # Initialize settings
 SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE = initialize_settings()
 
-# Initialize screen in full screen mode
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+# Initialize screen (not in full screen mode)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Tetris')
 
 # Clock
