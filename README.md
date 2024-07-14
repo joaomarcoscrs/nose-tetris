@@ -2,7 +2,7 @@
 
 A Tetris-like game, but instead of using your keys to play you use your nose movements, processed through a computer vision Keypoint Detection model.
 
-100% Open Source, built using [Inference](https://github.com/roboflow/inference) and [Pygame](https://github.com/pygame/pygame). The computer vision project is also open source, you can check it and test on (Universe)[https://universe.roboflow.com/my-workspace-vqpvh/facial-features-keypoints/model].
+100% Open Source, built using [Inference](https://github.com/roboflow/inference) and [Pygame](https://github.com/pygame/pygame). The computer vision project is also open source, you can check it and test on [Universe](https://universe.roboflow.com/my-workspace-vqpvh/facial-features-keypoints/model).
 
 ## the game 🎮
 
