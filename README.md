@@ -14,7 +14,7 @@ The controls are:
 
 ## system overview 💻
 
-![system overview](excalidraw.png)
+![How it's working right now](<Nose Tetris Diagram - 2.png>)
 
 ## run 🧑‍💻
 
