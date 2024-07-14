@@ -1,4 +1,4 @@
-# nose tetris 👃🧱🎮
+# nose tetris 👃 🧱 🎮
 
 A Tetris-like game, but instead of using your keys to play you use your nose movements, processed through a computer vision Keypoint Detection model.
 
